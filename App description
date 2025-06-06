@@ -1,0 +1,829 @@
+# **Issue: Build Complete Local AI Music Generator App for iOS/iPadOS**
+
+## **Project Title: SonicAI - Complete Local AI Music Generator**
+
+### **Issue Description**
+
+Create a complete, production-ready iOS/iPadOS application that generates high-quality music using AI models running entirely on-device. The app must be fully functional upon build with no placeholders, simulations, or missing features. Every UI element, service, and feature must be complete and operational.
+
+-----
+
+## **CRITICAL REQUIREMENTS**
+
+### **Deployment Targets**
+
+- **iOS**: 17.0 minimum, optimized for iPhone 15 Pro Max
+- **iPadOS**: 17.0 minimum, optimized for iPad Pro 13” M4
+- **Xcode**: 16.4 compatible
+- **macOS**: Sequoia 15.3.2 development environment
+
+### **Bundle Configuration**
+
+- **Bundle Identifier**: `com.sonicai.musicgenerator`
+- **App Name**: “SonicAI”
+- **Version**: 1.0.0
+- **Build**: 1
+
+-----
+
+## **COMPLETE APP STRUCTURE**
+
+### **1. PROJECT SETUP & DEPENDENCIES**
+
+#### **Required Frameworks (Add to project)**
+
+```swift
+import UIKit
+import SwiftUI
+import AVFoundation
+import CoreML
+import Metal
+import MetalKit
+import MetalPerformanceShaders
+import MetalPerformanceShadersGraph
+import Accelerate
+import CoreData
+import CoreGraphics
+import CoreImage
+import QuartzCore
+import MediaPlayer
+import MobileCoreServices
+import UniformTypeIdentifiers
+```
+
+#### **Entitlements Required**
+
+```xml
+<key>com.apple.developer.usernotifications.time-sensitive</key>
+<true/>
+<key>com.apple.security.personal-vpn</key>
+<false/>
+<key>NSMicrophoneUsageDescription</key>
+<string>SonicAI needs microphone access to record audio for music generation</string>
+<key>NSUserTrackingUsageDescription</key>
+<string>SonicAI uses this data to personalize your music generation experience</string>
+```
+
+#### **Info.plist Configuration**
+
+```xml
+<key>LSRequiresIPhoneOS</key>
+<true/>
+<key>UIRequiredDeviceCapabilities</key>
+<array>
+    <string>metal</string>
+    <string>arm64</string>
+</array>
+<key>UISupportedInterfaceOrientations</key>
+<array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+</array>
+```
+
+-----
+
+## **2. COMPLETE UI DESIGN SPECIFICATION**
+
+### **Color Palette (Exact Hex Values)**
+
+- **Primary Brand**: #6C5CE7 (Purple)
+- **Secondary**: #A29BFE (Light Purple)
+- **Accent**: #00CEC9 (Teal)
+- **Success**: #00B894 (Green)
+- **Warning**: #FDCB6E (Yellow)
+- **Error**: #E17055 (Red)
+- **Background Dark**: #2D3436 (Dark Gray)
+- **Background Light**: #F8F9FA (Light Gray)
+- **Text Primary**: #2D3436 (Dark)
+- **Text Secondary**: #636E72 (Medium Gray)
+- **Card Background**: #FFFFFF (White)
+- **Separator**: #DDD6FE (Light Purple Gray)
+
+### **Typography System**
+
+- **Headlines**: SF Pro Display, Weight 700, Size 28pt
+- **Subheadlines**: SF Pro Display, Weight 600, Size 22pt
+- **Body Large**: SF Pro Text, Weight 500, Size 17pt
+- **Body**: SF Pro Text, Weight 400, Size 15pt
+- **Caption**: SF Pro Text, Weight 400, Size 13pt
+- **Button Text**: SF Pro Text, Weight 600, Size 16pt
+
+-----
+
+## **3. COMPLETE APP NAVIGATION STRUCTURE**
+
+### **Tab Bar Controller (5 Tabs)**
+
+#### **Tab 1: Generate**
+
+- **Tab Bar Icon**: SF Symbol “waveform.badge.plus”
+- **Tab Bar Title**: “Generate”
+- **Selected Color**: #6C5CE7
+- **Unselected Color**: #636E72
+
+#### **Tab 2: Library**
+
+- **Tab Bar Icon**: SF Symbol “music.note.list”
+- **Tab Bar Title**: “Library”
+- **Selected Color**: #6C5CE7
+- **Unselected Color**: #636E72
+
+#### **Tab 3: Editor**
+
+- **Tab Bar Icon**: SF Symbol “slider.horizontal.3”
+- **Tab Bar Title**: “Editor”
+- **Selected Color**: #6C5CE7
+- **Unselected Color**: #636E72
+
+#### **Tab 4: Styles**
+
+- **Tab Bar Icon**: SF Symbol “paintbrush.pointed”
+- **Tab Bar Title**: “Styles”
+- **Selected Color**: #6C5CE7
+- **Unselected Color**: #636E72
+
+#### **Tab 5: Settings**
+
+- **Tab Bar Icon**: SF Symbol “gearshape”
+- **Tab Bar Title**: “Settings”
+- **Selected Color**: #6C5CE7
+- **Unselected Color**: #636E72
+
+-----
+
+## **4. COMPLETE SCREEN IMPLEMENTATIONS**
+
+### **4.1 GENERATE SCREEN (Main Generation Interface)**
+
+#### **Navigation Bar**
+
+- **Title**: “Generate Music” (SF Pro Display, 22pt, Weight 600)
+- **Background**: #FFFFFF with shadow
+- **Right Button**: “History” (SF Symbol “clock.arrow.circlepath”, Color: #6C5CE7)
+
+#### **Main Content Layout**
+
+##### **Prompt Input Section**
+
+- **Container**: Full-width card with 16pt margins
+- **Background**: #FFFFFF with corner radius 16pt, shadow
+- **Title**: “Describe Your Music” (SF Pro Display, 18pt, Weight 600, Color: #2D3436)
+- **Text View**:
+  - Placeholder: “Enter a description of the music you want to create… (e.g., ‘Upbeat pop song with electronic beats and female vocals’)”
+  - Font: SF Pro Text, 16pt, Weight 400
+  - Background: #F8F9FA
+  - Border: 1pt solid #DDD6FE
+  - Corner Radius: 12pt
+  - Height: 120pt
+  - Text Color: #2D3436
+
+##### **Style Selection Section**
+
+- **Title**: “Music Style” (SF Pro Display, 18pt, Weight 600, Color: #2D3436)
+- **Collection View**: Horizontal scrolling
+- **Style Pills**:
+  - Background: #DDD6FE (unselected), #6C5CE7 (selected)
+  - Text Color: #636E72 (unselected), #FFFFFF (selected)
+  - Corner Radius: 20pt
+  - Padding: 12pt horizontal, 8pt vertical
+  - Font: SF Pro Text, 14pt, Weight 500
+  - **Styles**: Pop, Rock, Hip Hop, Electronic, Jazz, Classical, Country, R&B, Reggae, Folk, Blues, Metal, Funk, Disco, House
+
+##### **Parameters Section**
+
+- **Duration Slider**:
+  - Label: “Duration: 30 seconds” (SF Pro Text, 16pt, Weight 500)
+  - Range: 15-180 seconds
+  - Thumb Color: #6C5CE7
+  - Track Color: #DDD6FE
+  - Value Display: Dynamic update as user drags
+- **Tempo Slider**:
+  - Label: “Tempo: 120 BPM” (SF Pro Text, 16pt, Weight 500)
+  - Range: 60-200 BPM
+  - Thumb Color: #6C5CE7
+  - Track Color: #DDD6FE
+- **Key Selection**:
+  - Label: “Key” (SF Pro Text, 16pt, Weight 500)
+  - Picker: C, C#, D, D#, E, F, F#, G, G#, A, A#, B + Major/Minor
+  - Background: #F8F9FA
+  - Border: 1pt solid #DDD6FE
+
+##### **Vocal Options Section**
+
+- **Switch**: “Include Vocals” (SF Pro Text, 16pt, Weight 500)
+- **Voice Selection** (when vocals enabled):
+  - Dropdown: Male Voice 1, Male Voice 2, Female Voice 1, Female Voice 2, Neutral Voice
+  - Background: #F8F9FA
+  - Border: 1pt solid #DDD6FE
+
+##### **Lyrics Input** (when vocals enabled)
+
+- **Text View**:
+  - Placeholder: “Enter lyrics or leave blank for AI-generated lyrics…”
+  - Font: SF Pro Text, 15pt, Weight 400
+  - Background: #F8F9FA
+  - Height: 100pt
+
+##### **Generate Button**
+
+- **Title**: “Generate Music” (SF Pro Text, 18pt, Weight 600)
+- **Background**: Linear gradient #6C5CE7 to #A29BFE
+- **Text Color**: #FFFFFF
+- **Corner Radius**: 16pt
+- **Height**: 56pt
+- **Full Width**: 16pt margins
+- **Shadow**: 0pt 4pt 12pt rgba(108, 92, 231, 0.3)
+
+##### **Generation Progress View** (shown during generation)
+
+- **Progress Bar**:
+  - Track Color: #DDD6FE
+  - Progress Color: #6C5CE7
+  - Height: 8pt
+  - Corner Radius: 4pt
+- **Status Label**: “Generating… 45%” (SF Pro Text, 16pt, Weight 500, Color: #6C5CE7)
+- **Cancel Button**: “Cancel” (SF Pro Text, 16pt, Weight 500, Color: #E17055)
+
+### **4.2 LIBRARY SCREEN**
+
+#### **Navigation Bar**
+
+- **Title**: “Your Music Library” (SF Pro Display, 22pt, Weight 600)
+- **Right Button**: “Sort” (SF Symbol “arrow.up.arrow.down”, Color: #6C5CE7)
+
+#### **Search Bar**
+
+- **Placeholder**: “Search your music…”
+- **Background**: #F8F9FA
+- **Search Icon**: SF Symbol “magnifyingglass”
+
+#### **Filter Tabs**
+
+- **Container**: Horizontal scroll view
+- **Tabs**: All, Recent, Favorites, Pop, Rock, Electronic, etc.
+- **Active Tab**: Background #6C5CE7, Text #FFFFFF
+- **Inactive Tab**: Background #F8F9FA, Text #636E72
+
+#### **Music Grid/List View**
+
+- **Card Design**:
+  - Background: #FFFFFF
+  - Corner Radius: 16pt
+  - Shadow: 0pt 2pt 8pt rgba(0,0,0,0.1)
+  - **Waveform Preview**: Visual representation using Core Graphics
+  - **Title**: SF Pro Text, 16pt, Weight 600, Color: #2D3436
+  - **Duration**: SF Pro Text, 14pt, Weight 400, Color: #636E72
+  - **Date Created**: SF Pro Text, 12pt, Weight 400, Color: #636E72
+  - **Play Button**: SF Symbol “play.circle.fill”, Size 44pt, Color: #6C5CE7
+  - **Menu Button**: SF Symbol “ellipsis”, Color: #636E72
+
+#### **Empty State**
+
+- **Icon**: SF Symbol “music.note” (Size 80pt, Color: #DDD6FE)
+- **Title**: “No Music Yet” (SF Pro Display, 24pt, Weight 600, Color: #2D3436)
+- **Subtitle**: “Generate your first song to get started!” (SF Pro Text, 16pt, Weight 400, Color: #636E72)
+- **Action Button**: “Generate Music” (matches Generate tab button style)
+
+### **4.3 EDITOR SCREEN**
+
+#### **Navigation Bar**
+
+- **Title**: “Audio Editor” (SF Pro Display, 22pt, Weight 600)
+- **Left Button**: “Close” (SF Pro Text, 16pt, Weight 400, Color: #6C5CE7)
+- **Right Button**: “Export” (SF Pro Text, 16pt, Weight 600, Color: #6C5CE7)
+
+#### **Waveform Display**
+
+- **Background**: #2D3436
+- **Waveform Color**: #00CEC9
+- **Selection Color**: #6C5CE7 with 50% opacity
+- **Playhead**: Vertical line #FDCB6E, 2pt width
+- **Time Markers**: White text, SF Pro Text, 12pt
+
+#### **Track Controls**
+
+- **Track Headers**:
+  - **Track Name**: Editable text field
+  - **Mute Button**: SF Symbol “speaker.slash” (muted) / “speaker.wave.2” (unmuted)
+  - **Solo Button**: “S” text button
+  - **Volume Slider**: Vertical, Thumb Color: #6C5CE7
+
+#### **Playback Controls**
+
+- **Container**: Bottom toolbar, Background: #FFFFFF
+- **Play/Pause**: SF Symbol “play.circle” / “pause.circle”, Size 60pt, Color: #6C5CE7
+- **Stop**: SF Symbol “stop.circle”, Size 44pt, Color: #636E72
+- **Rewind**: SF Symbol “backward.fill”, Size 44pt, Color: #636E72
+- **Fast Forward**: SF Symbol “forward.fill”, Size 44pt, Color: #636E72
+- **Time Display**: “00:00 / 03:45” (SF Pro Text, 16pt, Weight 500)
+
+#### **Effects Panel** (Slide-up sheet)
+
+- **Effects List**:
+  - Reverb, Echo, Distortion, Chorus, Flanger, EQ, Compressor
+  - **Effect Card**: White background, toggle switch, parameter sliders
+  - **Wet/Dry Mix**: Slider for each effect
+
+#### **Tools Toolbar**
+
+- **Background**: #F8F9FA
+- **Tools**: Cut, Copy, Paste, Delete, Trim, Fade In, Fade Out
+- **Tool Icons**: SF Symbols, Color: #636E72 (inactive), #6C5CE7 (active)
+
+### **4.4 STYLES SCREEN**
+
+#### **Navigation Bar**
+
+- **Title**: “Music Styles” (SF Pro Display, 22pt, Weight 600)
+- **Right Button**: “Download” (SF Symbol “icloud.and.arrow.down”, Color: #6C5CE7)
+
+#### **Featured Styles Section**
+
+- **Title**: “Featured Styles” (SF Pro Display, 20pt, Weight 600)
+- **Carousel**: Horizontal scrolling cards
+- **Style Card**:
+  - Background: Gradient based on style (Pop: pink, Rock: red, etc.)
+  - **Style Name**: SF Pro Display, 24pt, Weight 700, Color: #FFFFFF
+  - **Description**: SF Pro Text, 14pt, Weight 400, Color: #FFFFFF
+  - **Preview Button**: “Listen” (White background, style color text)
+
+#### **All Styles Grid**
+
+- **Section Headers**: “Popular”, “Electronic”, “Rock & Metal”, “Hip Hop & R&B”, “Jazz & Blues”, “Classical”, “World Music”
+- **Grid Item**:
+  - **Style Name**: SF Pro Text, 16pt, Weight 600
+  - **Sample Count**: “124 samples” (SF Pro Text, 13pt, Weight 400, Color: #636E72)
+  - **Download Status**: Cloud icon or checkmark
+  - **Background**: White card with corner radius 12pt
+
+#### **Style Detail Sheet** (Modal presentation)
+
+- **Large Title**: Style name
+- **Description**: Detailed text about the style
+- **Sample Audio**: Play button with waveform
+- **Related Styles**: Horizontal scroll of related style chips
+- **Use Style Button**: Full-width primary button
+
+### **4.5 SETTINGS SCREEN**
+
+#### **Navigation Bar**
+
+- **Title**: “Settings” (SF Pro Display, 22pt, Weight 600)
+
+#### **Settings Sections**
+
+##### **Audio Quality Section**
+
+- **Section Header**: “Audio Quality” (SF Pro Text, 13pt, Weight 400, Color: #636E72)
+- **Sample Rate**: 44.1 kHz / 48 kHz segmented control
+- **Bit Depth**: 16-bit / 24-bit segmented control
+- **Export Format**: AAC / ALAC / WAV picker
+
+##### **Generation Settings Section**
+
+- **AI Model**: Standard / High Quality picker
+- **Max Duration**: Slider 15-300 seconds
+- **Auto-Save**: Toggle switch
+- **Include Metadata**: Toggle switch
+
+##### **Performance Section**
+
+- **Use Neural Engine**: Toggle switch
+- **GPU Acceleration**: Toggle switch
+- **Background Processing**: Toggle switch
+- **Memory Usage**: “Optimize for Battery” / “Optimize for Performance”
+
+##### **About Section**
+
+- **Version**: “1.0.0 (1)” (SF Pro Text, 16pt, Weight 400)
+- **Model Info**: Displays loaded AI model details
+- **Privacy Policy**: Navigation link
+- **Terms of Service**: Navigation link
+- **Rate App**: Navigation link
+
+-----
+
+## **5. COMPLETE CORE FUNCTIONALITY IMPLEMENTATION**
+
+### **5.1 AI Music Generation Engine**
+
+#### **MusicGenerationEngine.swift**
+
+```swift
+import CoreML
+import AVFoundation
+import Metal
+import MetalPerformanceShaders
+
+class MusicGenerationEngine: ObservableObject {
+    private var musicModel: MLModel?
+    private var metalDevice: MTLDevice?
+    private var commandQueue: MTLCommandQueue?
+    
+    @Published var isGenerating = false
+    @Published var generationProgress: Float = 0.0
+    @Published var generatedAudio: AVAudioFile?
+    
+    init() {
+        setupMetal()
+        loadAIModel()
+    }
+    
+    private func setupMetal() {
+        metalDevice = MTLCreateSystemDefaultDevice()
+        commandQueue = metalDevice?.makeCommandQueue()
+    }
+    
+    private func loadAIModel() {
+        guard let modelURL = Bundle.main.url(forResource: "MusicTransformer", withExtension: "mlmodelc") else {
+            print("Failed to find model file")
+            return
+        }
+        
+        do {
+            let config = MLModelConfiguration()
+            config.computeUnits = .cpuAndNeuralEngine
+            config.allowLowPrecisionAccumulationOnGPU = true
+            musicModel = try MLModel(contentsOf: modelURL, configuration: config)
+        } catch {
+            print("Failed to load model: \(error)")
+        }
+    }
+    
+    func generateMusic(prompt: String, style: MusicStyle, parameters: GenerationParameters) async throws -> GeneratedMusic {
+        isGenerating = true
+        generationProgress = 0.0
+        
+        defer {
+            isGenerating = false
+            generationProgress = 0.0
+        }
+        
+        // Convert prompt to model input
+        let processedPrompt = processPrompt(prompt, style: style, parameters: parameters)
+        
+        // Generate music tokens
+        let tokens = try await generateTokens(from: processedPrompt)
+        
+        // Convert tokens to audio
+        let audioData = try await synthesizeAudio(from: tokens, parameters: parameters)
+        
+        // Create final audio file
+        let generatedMusic = try createAudioFile(from: audioData, parameters: parameters)
+        
+        return generatedMusic
+    }
+    
+    private func processPrompt(_ prompt: String, style: MusicStyle, parameters: GenerationParameters) -> MLFeatureProvider {
+        // Implementation for prompt processing
+        // Convert text to embeddings, apply style constraints
+        // Return MLFeatureProvider for model input
+    }
+    
+    private func generateTokens(from input: MLFeatureProvider) async throws -> [MusicToken] {
+        // Implementation for token generation using the AI model
+        // Handle progress updates
+        // Return sequence of music tokens
+    }
+    
+    private func synthesizeAudio(from tokens: [MusicToken], parameters: GenerationParameters) async throws -> Data {
+        // Implementation for audio synthesis
+        // Convert tokens to audio samples
+        // Apply effects and processing
+    }
+    
+    private func createAudioFile(from audioData: Data, parameters: GenerationParameters) throws -> GeneratedMusic {
+        // Create AVAudioFile and GeneratedMusic object
+        // Save to documents directory
+        // Return GeneratedMusic with metadata
+    }
+}
+```
+
+### **5.2 Audio Processing Pipeline**
+
+#### **AudioEngine.swift**
+
+```swift
+import AVFoundation
+import Metal
+
+class AudioEngine: ObservableObject {
+    private let audioEngine = AVAudioEngine()
+    private let playerNode = AVAudioPlayerNode()
+    private let mixerNode = AVAudioMixerNode()
+    private let reverbEffect = AVAudioUnitReverb()
+    private let delayEffect = AVAudioUnitDelay()
+    private let distortionEffect = AVAudioUnitDistortion()
+    
+    @Published var isPlaying = false
+    @Published var currentTime: TimeInterval = 0
+    @Published var duration: TimeInterval = 0
+    @Published var volume: Float = 0.8
+    
+    private var audioFile: AVAudioFile?
+    private var displayLink: CADisplayLink?
+    
+    init() {
+        setupAudioEngine()
+        setupDisplayLink()
+    }
+    
+    private func setupAudioEngine() {
+        // Attach nodes
+        audioEngine.attach(playerNode)
+        audioEngine.attach(mixerNode)
+        audioEngine.attach(reverbEffect)
+        audioEngine.attach(delayEffect)
+        audioEngine.attach(distortionEffect)
+        
+        // Connect nodes
+        audioEngine.connect(playerNode, to: reverbEffect, format: nil)
+        audioEngine.connect(reverbEffect, to: delayEffect, format: nil)
+        audioEngine.connect(delayEffect, to: distortionEffect, format: nil)
+        audioEngine.connect(distortionEffect, to: mixerNode, format: nil)
+        audioEngine.connect(mixerNode, to: audioEngine.outputNode, format: nil)
+        
+        // Prepare and start engine
+        audioEngine.prepare()
+        try? audioEngine.start()
+    }
+    
+    func loadAudioFile(_ file: AVAudioFile) {
+        audioFile = file
+        duration = Double(file.length) / file.fileFormat.sampleRate
+    }
+    
+    func play() {
+        guard let audioFile = audioFile else { return }
+        
+        playerNode.scheduleFile(audioFile, at: nil) { [weak self] in
+            DispatchQueue.main.async {
+                self?.isPlaying = false
+            }
+        }
+        
+        playerNode.play()
+        isPlaying = true
+    }
+    
+    func pause() {
+        playerNode.pause()
+        isPlaying = false
+    }
+    
+    func stop() {
+        playerNode.stop()
+        isPlaying = false
+        currentTime = 0
+    }
+    
+    // Effect controls
+    func setReverbWetDryMix(_ value: Float) {
+        reverbEffect.wetDryMix = value
+    }
+    
+    func setDelayWetDryMix(_ value: Float) {
+        delayEffect.wetDryMix = value
+    }
+    
+    func setDistortionWetDryMix(_ value: Float) {
+        distortionEffect.wetDryMix = value
+    }
+}
+```
+
+### **5.3 Voice Synthesis System**
+
+#### **VoiceSynthesizer.swift**
+
+```swift
+import AVFoundation
+import Speech
+
+class VoiceSynthesizer: NSObject, ObservableObject {
+    private let speechSynthesizer = AVSpeechSynthesizer()
+    private let audioEngine = AVAudioEngine()
+    private let playerNode = AVAudioPlayerNode()
+    private let pitchEffect = AVAudioUnitTimePitch()
+    
+    @Published var isSynthesizing = false
+    @Published var availableVoices: [AVSpeechSynthesisVoice] = []
+    
+    override init() {
+        super.init()
+        speechSynthesizer.delegate = self
+        setupAudioEngine()
+        loadAvailableVoices()
+    }
+    
+    private func setupAudioEngine() {
+        audioEngine.attach(playerNode)
+        audioEngine.attach(pitchEffect)
+        
+        audioEngine.connect(playerNode, to: pitchEffect, format: nil)
+        audioEngine.connect(pitchEffect, to: audioEngine.outputNode, format: nil)
+        
+        audioEngine.prepare()
+        try? audioEngine.start()
+    }
+    
+    private func loadAvailableVoices() {
+        availableVoices = AVSpeechSynthesisVoice.speechVoices()
+            .filter { $0.language.starts(with: "en") }
+    }
+    
+    func synthesizeVocals(lyrics: String, melody: [Note], voice: AVSpeechSynthesisVoice) async throws -> AVAudioFile {
+        isSynthesizing = true
+        defer { isSynthesizing = false }
+        
+        // Convert lyrics to phonemes with timing
+        let timedPhonemes = try processLyricsWithMelody(lyrics: lyrics, melody: melody)
+        
+        // Generate speech with musical timing
+        let audioBuffer = try await generateMusicalSpeech(phonemes: timedPhonemes, voice: voice)
+        
+        // Apply vocal effects
+        let processedBuffer = try applyVocalEffects(to: audioBuffer)
+        
+        // Save as audio file
+        return try saveAudioBuffer(processedBuffer)
+    }
+    
+    private func processLyricsWithMelody(lyrics: String, melody: [Note]) throws -> [TimedPhoneme] {
+        // Implementation for phoneme extraction and timing alignment
+    }
+    
+    private func generateMusicalSpeech(phonemes: [TimedPhoneme], voice: AVSpeechSynthesisVoice) async throws -> AVAudioPCMBuffer {
+        // Implementation for speech synthesis with musical timing
+    }
+    
+    private func applyVocalEffects(to buffer: AVAudioPCMBuffer) throws -> AVAudioPCMBuffer {
+        // Apply pitch correction, formant shifting, etc.
+    }
+}
+
+extension VoiceSynthesizer: AVSpeechSynthesizerDelegate {
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
+        // Handle speech start
+    }
+    
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        // Handle speech completion
+    }
+}
+```
+
+### **5.4 Waveform Visualization**
+
+#### **WaveformView.swift**
+
+```swift
+import UIKit
+import Metal
+import MetalKit
+
+class WaveformView: MTKView {
+    private var commandQueue: MTLCommandQueue?
+    private var renderPipelineState: MTLRenderPipelineState?
+    private var audioBuffer: [Float] = []
+    private var vertexBuffer: MTLBuffer?
+    
+    var waveformColor: UIColor = UIColor(hex: "#00CEC9") {
+        didSet { setNeedsDisplay() }
+    }
+    
+    override init(frame frameRect: CGRect, device: MTLDevice?) {
+        super.init(frame: frameRect, device: device ?? MTLCreateSystemDefaultDevice())
+        setupMetal()
+    }
+    
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
+        device = MTLCreateSystemDefaultDevice()
+        setupMetal()
+    }
+    
+    private func setupMetal() {
+        guard let device = device else { return }
+        
+        commandQueue = device.makeCommandQueue()
+        
+        // Create render pipeline
+        let library = device.makeDefaultLibrary()
+        let vertexFunction = library?.makeFunction(name: "waveformVertexShader")
+        let fragmentFunction = library?.makeFunction(name: "waveformFragmentShader")
+        
+        let pipelineDescriptor = MTLRenderPipelineDescriptor()
+        pipelineDescriptor.vertexFunction = vertexFunction
+        pipelineDescriptor.fragmentFunction = fragmentFunction
+        pipelineDescriptor.colorAttachments[0].pixelFormat = colorPixelFormat
+        
+        renderPipelineState = try? device.makeRenderPipelineState(descriptor: pipelineDescriptor)
+        
+        delegate = self
+    }
+    
+    func updateAudioBuffer(_ buffer: [Float]) {
+        audioBuffer = buffer
+        
+        // Create vertex data from audio buffer
+        let vertices = createVertices(from: buffer)
+        
+        guard let device = device else { return }
+        vertexBuffer = device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Float>.size, options: [])
+        
+        setNeedsDisplay()
+    }
+    
+    private func createVertices(from audioBuffer: [Float]) -> [Float] {
+        var vertices: [Float] = []
+        let width = Float(bounds.width)
+        let height = Float(bounds.height)
+        
+        for (index, sample) in audioBuffer.enumerated() {
+            let x = (Float(index) / Float(audioBuffer.count)) * 2.0 - 1.0
+            let y = sample * 0.8 // Scale amplitude
+            
+            vertices.append(x)
+            vertices.append(y)
+        }
+        
+        return vertices
+    }
+}
+
+extension WaveformView: MTKViewDelegate {
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+        // Handle size changes
+    }
+    
+    func draw(in view: MTKView) {
+        guard let commandBuffer = commandQueue?.makeCommandBuffer(),
+              let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: currentRenderPassDescriptor!),
+              let pipelineState = renderPipelineState,
+              let vertexBuffer = vertexBuffer else { return }
+        
+        renderEncoder.setRenderPipelineState(pipelineState)
+        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+        
+        let colorComponents = waveformColor.cgColor.components ?? [0, 0, 0, 1]
+        var color = SIMD4<Float>(Float(colorComponents[0]), Float(colorComponents[1]), Float(colorComponents[2]), Float(colorComponents[3]))
+        renderEncoder.setFragmentBytes(&color, length: MemoryLayout<SIMD4<Float>>.size, index: 0)
+        
+        renderEncoder.drawPrimitives(type: .lineStrip, vertexStart: 0, vertexCount: audioBuffer.count)
+        renderEncoder.endEncoding()
+        
+        commandBuffer.present(currentDrawable!)
+        commandBuffer.commit()
+    }
+}
+```
+
+### **5.5 Metal Shaders**
+
+#### **Shaders.metal**
+
+```metal
+#include <metal_stdlib>
+using namespace metal;
+
+struct VertexOut {
+    float4 position [[position]];
+    float amplitude;
+};
+
+vertex VertexOut waveformVertexShader(uint vertexID [[vertex_id]],
+                                     constant float2* vertices [[buffer(0)]]) {
+    VertexOut out;
+    out.position = float4(vertices[vertexID], 0.0, 1.0);
+    out.amplitude = vertices[vertexID].y;
+    return out;
+}
+
+fragment float4 waveformFragmentShader(VertexOut in [[stage_in]],
+                                      constant float4& color [[buffer(0)]]) {
+    float alpha = smoothstep(0.0, 1.0, abs(in.amplitude));
+    return float4(color.rgb, alpha * color.a);
+}
+
+// Audio processing kernels
+kernel void realtimeReverb(device float* inputBuffer [[buffer(0)]],
+                          device float* outputBuffer [[buffer(1)]],
+                          device float* impulseResponse [[buffer(2)]],
+                          constant uint& impulseLength [[buffer(3)]],
+                          uint index [[thread_position_in_grid]]) {
+    float sample = 0.0;
+    for (uint i = 0; i < impulseLength && index >= i; i++) {
+        sample += inputBuffer[index - i] * impulseResponse[i];
+    }
+    outputBuffer[index] = sample;
+}
+
+kernel void audioEqualizer(device float* audioBuffer [[buffer(0)]],
+                          constant float* eqGains [[buffer(1)]],
+                          constant uint& bufferLength [[buffer(2)]],
+                          uint index [[thread_position_in_grid]])
+```
